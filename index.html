@@ -101,26 +101,30 @@
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         // Form submission handler
-        document.getElementById("contactForm").onsubmit = async function(event) {
-            event.preventDefault();
+        document.getElementById("contactForm").addEventListener("submit", async function(event) {
+            event.preventDefault();  // Prevent the page from reloading
             
             const email = document.getElementById('email').value;
             const password = 'default-password'; // Adjust this or add a password field
             
-            // Sign up user using Supabase Auth
-            let { user, error } = await supabase.auth.signUp({
-                email: email,
-                password: password
-            });
+            try {
+                // Sign up user using Supabase Auth
+                let { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
 
-            if (error) {
-                alert('Sign up failed: ' + error.message);
-            } else {
-                alert('Sign up successful! Please check your email for confirmation.');
+                if (error) {
+                    alert('Sign up failed: ' + error.message);
+                } else {
+                    alert('Sign up successful! Please check your email for confirmation.');
+                }
+            } catch (err) {
+                alert('Error: ' + err.message);
             }
 
-            this.reset();
-        };
+            this.reset(); // Reset the form after submission
+        });
 
         // Show alert on button click
         function showAlert() {
