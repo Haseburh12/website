@@ -80,9 +80,7 @@
     <main>
         <h2>Contact Us</h2>
         <form id="contactForm">
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <input type="text" placeholder="Your Message" required>
+            <input type="email" id="email" placeholder="Your Email" required>
             <button type="submit">Submit</button>
         </form>
     </main>
@@ -94,38 +92,40 @@
         </nav>
         <p>&copy; 2024 My Website</p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.0.0/dist/supabase.min.js"></script>
     <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'https://vdrxcqivnyyvhsiyqbic.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkcnhjcWl2bnl5dmhzaXlxYmljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MDE0NzYsImV4cCI6MjA0MzA3NzQ3Nn0.dXcZO7_1fB8Fi3Y3d7eCNXb4rKe1KZw_PcFL2AJpX50';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Form submission handler
+        document.getElementById("contactForm").onsubmit = async function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = 'default-password'; // Adjust this or add a password field
+            
+            // Sign up user using Supabase Auth
+            let { user, error } = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+
+            if (error) {
+                alert('Sign up failed: ' + error.message);
+            } else {
+                alert('Sign up successful! Please check your email for confirmation.');
+            }
+
+            this.reset();
+        };
+
+        // Show alert on button click
         function showAlert() {
             alert('Thank you for your interest! More info coming soon.');
         }
-
-        document.getElementById('contactForm').onsubmit = function(event) {
-            event.preventDefault();
-            alert('Form submitted successfully!');
-            this.reset();
-        };
-    </script>
-    <script>
-        document.getElementById("signup-form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  
-  const response = await fetch("/api/signup", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  });
-
-  const data = await response.json();
-  if (data.success) {
-    alert("Sign up successful");
-  } else {
-    alert("Sign up failed");
-  }
-});
     </script>
 </body>
 </html>
